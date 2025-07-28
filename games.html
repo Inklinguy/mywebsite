@@ -1,15 +1,63 @@
-<h2>My Roblox Games</h2>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Roblox Games</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      color: #222;
+    }
+    .game-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .game {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 250px;
+    }
+    .game img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    .game h3 {
+      margin-top: 10px;
+    }
+    .game a {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: #00b3ff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>My Roblox Games</h1>
 
-<div style="display: flex; gap: 20px;">
-  <div>
-    <img src="https://via.placeholder.com/200x120?text=Game+1" alt="Game 1">
-    <h3>Zombie Escape</h3>
-    <a href="https://www.roblox.com/games/YOUR-GAME-ID" target="_blank">Play on Roblox</a>
-  </div>
+  <div class="game-list">
+    <div class="game">
+      <img src="https://via.placeholder.com/250x140?text=Game+1" alt="Game 1">
+      <h3>Zombie Rush</h3>
+      <a href="https://www.roblox.com/games/YOUR_GAME_ID" target="_blank">Play on Roblox</a>
+    </div>
 
-  <div>
-    <img src="https://via.placeholder.com/200x120?text=Game+2" alt="Game 2">
-    <h3>Obby Challenge</h3>
-    <a href="https://www.roblox.com/games/YOUR-GAME-ID" target="_blank">Play on Roblox</a>
+    <div class="game">
+      <img src="https://via.placeholder.com/250x140?text=Game+2" alt="Game 2">
+      <h3>Epic Obby</h3>
+      <a href="https://www.roblox.com/games/YOUR_GAME_ID" target="_blank">Play on Roblox</a>
+    </div>
+
+    <!-- Add more games here -->
   </div>
-</div>
+</body>
+</html>
