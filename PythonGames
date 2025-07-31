@@ -1,1 +1,103 @@
-hi
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Python Games</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f0f0f0;
+      margin: 0;
+    }
+
+    h1 {
+      color: #222;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .game-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .game {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 250px;
+      transition: transform 0.2s;
+    }
+
+    .game:hover {
+      transform: translateY(-5px);
+    }
+
+    .game img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    .game h3 {
+      margin: 10px 0 8px;
+      font-size: 18px;
+    }
+
+    .game a {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: #007acc;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .game a:hover {
+      background: #005c99;
+    }
+
+    @media screen and (max-width: 600px) {
+      .game {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>My Python Games</h1>
+
+  <div class="game-list">
+    <div class="game">
+      <img src="https://i.imgur.com/your-shark-screenshot.png" alt="Shark Game">
+      <h3>Shark Adventure</h3>
+      <a href="https://inklinguy.github.io/pythongames/sharkgame/" target="_blank">Play Game</a>
+    </div>
+
+    <div class="game">
+      <img src="https://i.imgur.com/your-platformer-screenshot.png" alt="Platformer">
+      <h3>Pixel Platformer</h3>
+      <a href="https://inklinguy.github.io/pythongames/platformer/" target="_blank">Play Game</a>
+    </div>
+
+    <div class="game">
+      <img src="https://i.imgur.com/your-space-screenshot.png" alt="Space Game">
+      <h3>Space Blaster</h3>
+      <a href="https://inklinguy.github.io/pythongames/spaceblaster/" target="_blank">Play Game</a>
+    </div>
+  </div>
+
+</body>
+</html>
+
