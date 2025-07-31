@@ -50,17 +50,19 @@
     .game h3 {
       margin: 10px 0 8px;
       font-size: 18px;
+      text-align: center;
     }
 
     .game a {
-      display: inline-block;
+      display: block;
+      text-align: center;
       margin-top: 8px;
-      padding: 8px 12px;
+      padding: 10px 15px;
       background: #007acc;
       color: white;
       text-decoration: none;
       border-radius: 5px;
-      font-size: 14px;
+      font-size: 15px;
     }
 
     .game a:hover {
@@ -79,25 +81,17 @@
   <h1>My Python Games</h1>
 
   <div class="game-list">
+
+    <!-- SHARK GAME CARD -->
     <div class="game">
-      <img src="https://i.imgur.com/your-shark-screenshot.png" alt="Shark Game">
+      <img src="https://i.imgur.com/u7zKeGD.png" alt="Shark Game">
       <h3>Shark Adventure</h3>
-      <a href="https://inklinguy.github.io/pythongames/sharkgame/" target="_blank">Play Game</a>
+      <a href="https://inklinguy.github.io/mywebsite/pythongames/sharkgame/" target="_blank">Play Game</a>
     </div>
 
-    <div class="game">
-      <img src="https://i.imgur.com/your-platformer-screenshot.png" alt="Platformer">
-      <h3>Pixel Platformer</h3>
-      <a href="https://inklinguy.github.io/pythongames/platformer/" target="_blank">Play Game</a>
-    </div>
+    <!-- Add more games below using the same structure -->
 
-    <div class="game">
-      <img src="https://i.imgur.com/your-space-screenshot.png" alt="Space Game">
-      <h3>Space Blaster</h3>
-      <a href="https://inklinguy.github.io/pythongames/spaceblaster/" target="_blank">Play Game</a>
-    </div>
   </div>
 
 </body>
 </html>
-
