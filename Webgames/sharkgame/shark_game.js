@@ -252,7 +252,7 @@ function drawScene() {
 
 function drawScore() {
   ctx.fillStyle = 'black';
-  ctx.font = '24px Arial';
+  ctx.font = '28px Arial';
   ctx.fillText(`Score: ${score}`, 10, 30);
   ctx.font = '32px Arial';
   ctx.fillText(`Time: ${Math.max(0, Math.floor(gameTime))}`, WIDTH - 150, 30);
