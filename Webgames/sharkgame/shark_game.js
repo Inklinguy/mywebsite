@@ -37,9 +37,22 @@ style.innerHTML = `
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 24px;
-    padding: 12px 24px;
+    font-size: 32px;
+    padding: 20px 40px;
+    background-color: #1E90FF;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
     z-index: 10000;
+  }
+  #restartBtn:hover {
+    background-color: #4682B4;
+  }
+  #restartBtn:active {
+    background-color: #5A9BD5;
   }
 `;
 document.head.appendChild(style);
@@ -149,7 +162,7 @@ function updateMobileMovement() {
 let keys = {};
 document.addEventListener('keydown', e => {
   keys[e.key] = true;
-  if (gameOver && e.key === 'r') startGame();
+  if (gameOver && e.key === 'r') startGame(); // Restart on 'r' key press
 });
 document.addEventListener('keyup', e => keys[e.key] = false);
 
