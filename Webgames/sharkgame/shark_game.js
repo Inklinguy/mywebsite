@@ -428,7 +428,7 @@ function startGame() {
   seagulls = [];
   orcas = [];
   generateTerrain();
-  clouds = []; // Reset clouds
+  clouds = [];
   gameLoop();
 }
 
