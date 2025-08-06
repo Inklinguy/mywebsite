@@ -135,11 +135,24 @@ function updateMobileMovement() {
   if (joystickDX < -20) shark.x -= sharkSpeed;
   if (joystickDX > 20) shark.x += sharkSpeed;
 
-  if (jumpQueued && shark.y + shark.height >= HEIGHT - 1) {
-    velocityY = -jumpForce;
-    jumpQueued = false;
+  // Emulate ArrowUp behavior
+  if (joystickDY < -20) {
+    if (shark.y < HEIGHT / 3) {
+      if (canJump) {
+        velocityY = -jumpForce;
+        canJump = false;
+      }
+    } else {
+      velocityY -= swimForce;
+    }
+  }
+
+  // Emulate ArrowDown behavior
+  if (joystickDY > 20) {
+    velocityY += swimForce;
   }
 }
+
 
 // === Desktop Controls ===
 let keys = {};
