@@ -18,6 +18,7 @@ restartBtn.id = 'restartBtn';
 restartBtn.style.display = 'none';
 document.body.appendChild(restartBtn);
 
+// Styles
 const style = document.createElement('style');
 style.innerHTML = `
   #joystick {
@@ -57,7 +58,7 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
-// Resize canvas based on window size
+// Resize canvas
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -111,6 +112,7 @@ for (const [key, src] of Object.entries(soundSources)) {
   assets[key + 'Sound'] = snd;
 }
 
+// Joystick logic
 let joystickActive = false, joystickStartX = 0, joystickStartY = 0, joystickDX = 0, joystickDY = 0;
 
 joystick.addEventListener('touchstart', e => {
@@ -137,32 +139,27 @@ joystick.addEventListener('touchend', () => {
 }, { passive: false });
 
 function updateMobileMovement() {
-  // Left/Right movement
   if (joystickDX < -20) shark.x -= sharkSpeed;
   if (joystickDX > 20) shark.x += sharkSpeed;
-
-  // Up/Down movement
   if (joystickDY < -30) {
-    // Jump when in air
     if (shark.y < HEIGHT / 3) {
       if (canJump) {
         velocityY = -jumpForce;
         canJump = false;
       }
     } else {
-      // Swim upwards when in water
       velocityY -= swimForce;
     }
   } else if (joystickDY > 30) {
-    // Swim downwards
     velocityY += swimForce;
   }
 }
 
+// Keyboard movement
 let keys = {};
 document.addEventListener('keydown', e => {
   keys[e.key] = true;
-  if (gameOver && e.key === 'r') startGame(); // Restart on 'r' key press
+  if (gameOver && e.key === 'r') startGame();
 });
 document.addEventListener('keyup', e => keys[e.key] = false);
 
@@ -182,6 +179,7 @@ function updateDesktopMovement() {
   if (keys['ArrowRight']) shark.x += sharkSpeed;
 }
 
+// Terrain
 function generateTerrain() {
   const base = HEIGHT - 150;
   let last = base;
@@ -214,6 +212,7 @@ function drawTerrain() {
   ctx.fill();
 }
 
+// Collision
 function sharkCollidesWithTerrain() {
   const sharkBottom = shark.y + shark.height;
   for (let x = Math.floor(shark.x); x < shark.x + shark.width; x++) {
@@ -228,7 +227,51 @@ function collides(a, b) {
   return a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
 }
 
-// Cloud setup and updates
+// Scene
+function drawScene() {
+  ctx.fillStyle = AIR_COLOR;
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+  ctx.fillStyle = WATER_COLOR;
+  ctx.fillRect(0, HEIGHT / 3, WIDTH, HEIGHT);
+  drawTerrain();
+  drawClouds();
+  ctx.drawImage(assets.shark, shark.x, shark.y, SHARK_WIDTH, SHARK_HEIGHT);
+  fishes.forEach(f => ctx.drawImage(assets.fish, f.x, f.y, 40, 40));
+  crabs.forEach(c => ctx.drawImage(assets.crab, c.x, c.y, 40, 40));
+  seagulls.forEach(s => ctx.drawImage(assets.seagull, s.x, s.y, 50, 40));
+  orcas.forEach(o => {
+    ctx.save();
+    if (o.direction === -1) ctx.scale(-1, 1);
+    ctx.drawImage(assets.orca, o.direction === -1 ? -o.x - o.width : o.x, o.y, o.width, o.height);
+    ctx.restore();
+  });
+  if (flashCounter > 0) {
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    flashCounter--;
+  }
+}
+
+function drawScore() {
+  ctx.fillStyle = 'black';
+  ctx.font = '24px Arial';
+  ctx.fillText(`Score: ${score}`, 10, 30);
+  ctx.font = '32px Arial';
+  ctx.fillText(`Time: ${Math.max(0, Math.floor(gameTime))}`, WIDTH - 150, 30);
+}
+
+function drawGameOver() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+  ctx.fillStyle = 'white';
+  ctx.font = '48px Arial';
+  ctx.fillText('Game Over', WIDTH / 2 - 120, HEIGHT / 2 - 20);
+  ctx.font = '32px Arial';
+  ctx.fillText(`Final Score: ${score}`, WIDTH / 2 - 100, HEIGHT / 2 + 30);
+  restartBtn.style.display = 'block';
+}
+
+// ✅ Clouds
 let clouds = [];
 
 function generateClouds() {
@@ -244,19 +287,10 @@ function generateClouds() {
 }
 
 function updateClouds() {
-  clouds.forEach((cloud, index) => {
+  clouds.forEach(cloud => {
     cloud.x -= cloud.speed;
-    if (cloud.x + cloud.width < 0) {
-      // Reposition cloud to the right side once it goes off-screen
-      clouds[index] = {
-        x: WIDTH,
-        y: Math.random() * 100,
-        speed: Math.random() * 0.5 + 0.5,
-        width: 100 + Math.random() * 150,
-        height: 40 + Math.random() * 30
-      };
-    }
   });
+  clouds = clouds.filter(c => c.x + c.width > 0);
 }
 
 function drawClouds() {
@@ -268,7 +302,7 @@ function drawClouds() {
   });
 }
 
-// Spawning game entities
+// Entities
 function spawnEntities() {
   if (spawnTimer % 90 === 0)
     fishes.push({ x: WIDTH + 20, y: HEIGHT / 3 + Math.random() * (HEIGHT - HEIGHT / 3 - 120), width: 40, height: 40 });
@@ -281,19 +315,17 @@ function spawnEntities() {
 
   if (spawnTimer % 400 === 0) {
     const direction = Math.random() < 0.5 ? -1 : 1;
-    const newOrca = {
+    orcas.push({
       active: true,
       direction,
       x: direction === -1 ? WIDTH + 200 : -200,
       y: HEIGHT / 3 + Math.random() * (HEIGHT - HEIGHT / 3 - 120),
       width: 160,
       height: 100
-    };
-    orcas.push(newOrca);
+    });
   }
 }
 
-// Updating game entities
 function updateEntities() {
   const speed = 4;
   fishes.forEach(f => f.x -= speed);
@@ -312,7 +344,6 @@ function updateEntities() {
   orcas = orcas.filter(o => o.active);
 }
 
-// Handling collisions
 function handleCollisions() {
   fishes = fishes.filter(f => {
     if (collides(shark, f)) {
@@ -363,16 +394,17 @@ function gameLoop() {
   updateTerrain();
   spawnEntities();
   updateEntities();
+  generateClouds(); // ✅ THIS WAS MISSING
+  updateClouds();
   handleCollisions();
-  updateClouds();  // Update cloud positions
 
   if (score - lastScoreCheckpoint >= 30) {
     gameTime += 20;
     lastScoreCheckpoint = score;
   }
 
-  if (shark.y < HEIGHT / 3) velocityY += gravityAir;
-  else velocityY += gravityAir * 0.15, velocityY *= 1 - dragWater;
+  velocityY += (shark.y < HEIGHT / 3) ? gravityAir : gravityAir * 0.15;
+  if (shark.y >= HEIGHT / 3) velocityY *= 1 - dragWater;
 
   velocityY = Math.max(-25, Math.min(velocityY, maxFallSpeed));
   shark.y += velocityY;
@@ -395,11 +427,11 @@ function gameLoop() {
 
   drawScene();
   drawScore();
-  drawClouds();  // Draw clouds
   spawnTimer++;
   requestAnimationFrame(gameLoop);
 }
 
+// Start game
 function startGame() {
   score = 0;
   lastScoreCheckpoint = 0;
@@ -409,10 +441,12 @@ function startGame() {
   crabs = [];
   seagulls = [];
   orcas = [];
+  clouds = [];
   generateTerrain();
-  clouds = [];  // Reset clouds
   restartBtn.style.display = 'none';
   gameLoop();
 }
 
-startGame(); // Start the game loop
+restartBtn.addEventListener('click', startGame);
+
+startGame();
