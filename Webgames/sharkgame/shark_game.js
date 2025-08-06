@@ -1,4 +1,4 @@
-// === Shark Game with Improved Joystick Tap-Jump and Boundaries ===
+// === Shark Game with Full Joystick Support and Mobile Restart ===
 
 // Setup canvas
 const canvas = document.createElement('canvas');
@@ -11,6 +11,12 @@ const ctx = canvas.getContext('2d');
 const joystick = document.createElement('div');
 joystick.id = 'joystick';
 document.body.appendChild(joystick);
+
+const restartBtn = document.createElement('button');
+restartBtn.innerText = 'Play Again';
+restartBtn.id = 'restartBtn';
+restartBtn.style.display = 'none';
+document.body.appendChild(restartBtn);
 
 const style = document.createElement('style');
 style.innerHTML = `
@@ -26,10 +32,18 @@ style.innerHTML = `
     touch-action: none;
     z-index: 9999;
   }
+  #restartBtn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    padding: 12px 24px;
+    z-index: 10000;
+  }
 `;
 document.head.appendChild(style);
 
-// Resize canvas
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -55,15 +69,8 @@ const jumpForce = 20;
 const maxFallSpeed = 10;
 let canJump = true;
 
-let terrainHeights = [];
-let terrainOffset = 0;
-let fishes = [], crabs = [], seagulls = [], orcas = [];
-let score = 0;
-let gameTime = 60;
-let gameOver = false;
-let spawnTimer = 0;
-let flashCounter = 0;
-let lastScoreCheckpoint = 0;
+let terrainHeights = [], fishes = [], crabs = [], seagulls = [], orcas = [];
+let score = 0, gameTime = 60, gameOver = false, spawnTimer = 0, flashCounter = 0, lastScoreCheckpoint = 0;
 
 // Load assets
 const assets = {};
@@ -90,42 +97,26 @@ for (const [key, src] of Object.entries(soundSources)) {
   assets[key + 'Sound'] = snd;
 }
 
-// === Joystick Controls (improved) ===
-let joystickActive = false;
-let joystickStartX = 0;
-let joystickStartY = 0;
-let joystickDX = 0;
-let joystickDY = 0;
-let jumpQueued = false;
-let tapTimeout = null;
+let joystickActive = false, joystickStartX = 0, joystickStartY = 0, joystickDX = 0, joystickDY = 0;
 
-const joystickEl = document.getElementById('joystick');
-
-joystickEl.addEventListener('touchstart', e => {
+joystick.addEventListener('touchstart', e => {
   joystickActive = true;
   const touch = e.touches[0];
   joystickStartX = touch.clientX;
   joystickStartY = touch.clientY;
   joystickDX = 0;
   joystickDY = 0;
-
-  tapTimeout = setTimeout(() => { tapTimeout = null; }, 150);
 }, { passive: false });
 
-joystickEl.addEventListener('touchmove', e => {
+joystick.addEventListener('touchmove', e => {
   if (!joystickActive) return;
   const touch = e.touches[0];
   joystickDX = touch.clientX - joystickStartX;
   joystickDY = touch.clientY - joystickStartY;
+  e.preventDefault();
 }, { passive: false });
 
-joystickEl.addEventListener('touchend', () => {
-  if (tapTimeout) {
-    jumpQueued = true;
-    clearTimeout(tapTimeout);
-    tapTimeout = null;
-  }
-
+joystick.addEventListener('touchend', () => {
   joystickActive = false;
   joystickDX = 0;
   joystickDY = 0;
@@ -135,8 +126,7 @@ function updateMobileMovement() {
   if (joystickDX < -20) shark.x -= sharkSpeed;
   if (joystickDX > 20) shark.x += sharkSpeed;
 
-  // Emulate ArrowUp behavior
-  if (joystickDY < -20) {
+  if (joystickDY < -30) {
     if (shark.y < HEIGHT / 3) {
       if (canJump) {
         velocityY = -jumpForce;
@@ -145,16 +135,11 @@ function updateMobileMovement() {
     } else {
       velocityY -= swimForce;
     }
-  }
-
-  // Emulate ArrowDown behavior
-  if (joystickDY > 20) {
+  } else if (joystickDY > 30) {
     velocityY += swimForce;
   }
 }
 
-
-// === Desktop Controls ===
 let keys = {};
 document.addEventListener('keydown', e => {
   keys[e.key] = true;
@@ -178,7 +163,6 @@ function updateDesktopMovement() {
   if (keys['ArrowRight']) shark.x += sharkSpeed;
 }
 
-// === Terrain ===
 function generateTerrain() {
   const base = HEIGHT - 150;
   let last = base;
@@ -264,7 +248,7 @@ function drawGameOver() {
   ctx.fillText('Game Over', WIDTH / 2 - 120, HEIGHT / 2 - 20);
   ctx.font = '32px Arial';
   ctx.fillText(`Final Score: ${score}`, WIDTH / 2 - 100, HEIGHT / 2 + 30);
-  ctx.fillText('Press R to Restart', WIDTH / 2 - 110, HEIGHT / 2 + 70);
+  restartBtn.style.display = 'block';
 }
 
 function spawnEntities() {
@@ -332,7 +316,6 @@ function handleCollisions() {
   seagulls = seagulls.filter(s => {
     if (collides(shark, s)) {
       score += 4;
-      flashCounter = 0;
       assets.eatSound.play();
       return false;
     }
@@ -377,13 +360,9 @@ function gameLoop() {
 
   while (sharkCollidesWithTerrain()) shark.y--, velocityY = 0, canJump = true;
 
-  if (joystickActive) {
-    updateMobileMovement();
-  } else {
-    updateDesktopMovement();
-  }
+  if (joystickActive) updateMobileMovement();
+  else updateDesktopMovement();
 
-  // Clamp shark to screen
   if (shark.y + shark.height > HEIGHT) shark.y = HEIGHT - shark.height, velocityY = 0;
   if (shark.y < 0) shark.y = 0;
   if (shark.x < 0) shark.x = 0;
@@ -410,8 +389,14 @@ function startGame() {
   crabs = [];
   seagulls = [];
   orcas = [];
+  shark.x = 100;
+  shark.y = HEIGHT / 2;
+  velocityY = 0;
+  restartBtn.style.display = 'none';
   generateTerrain();
   gameLoop();
 }
+
+restartBtn.addEventListener('click', startGame);
 
 startGame();
