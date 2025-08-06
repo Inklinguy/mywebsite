@@ -261,11 +261,18 @@ function drawScore() {
 function drawGameOver() {
   ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
   ctx.fillStyle = 'white';
   ctx.font = '48px Arial';
-  ctx.fillText('Game Over', WIDTH / 2 - 120, HEIGHT / 2 - 20);
+  ctx.textAlign = 'center';
+  ctx.fillText('Game Over', WIDTH / 2, HEIGHT / 3 - 20);
   ctx.font = '32px Arial';
-  ctx.fillText(`Final Score: ${score}`, WIDTH / 2 - 100, HEIGHT / 2 + 30);
+  ctx.fillText(`Final Score: ${score}`, WIDTH / 2, HEIGHT / 3 + 30);
+  ctx.fillText(`Hit 'R' to restart`, WIDTH / 2, HEIGHT / 3 + 70);
+
+  restartBtn.style.top = '25%'; // Move button to top third
+  restartBtn.style.left = '50%';
+  restartBtn.style.transform = 'translate(-50%, 0)';
   restartBtn.style.display = 'block';
 }
 
