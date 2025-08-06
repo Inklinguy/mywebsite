@@ -272,7 +272,7 @@ function drawGameOver() {
   ctx.fillStyle = 'white';
   ctx.font = '48px Arial';
   ctx.textAlign = 'center';
-  ctx.fillText('Game Over', WIDTH / 2, startY - 20);
+  ctx.fillText('Game Over', WIDTH / 2, startY - 40);
   ctx.font = '32px Arial';
   ctx.fillText(`Final Score: ${score}`, WIDTH / 2, startY + 30);
   ctx.fillText(`Hit 'R' to restart`, WIDTH / 2, startY + 70);
