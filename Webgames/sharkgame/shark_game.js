@@ -284,7 +284,7 @@ function generateClouds() {
       y: Math.random() * 100,
       speed: Math.random() * 0.5 + 0.3,
       width: 100 + Math.random() * 150,
-      height: 40 + Math.random() * 30
+      height: 30 + Math.random() * 30
     });
   }
 }
