@@ -3,112 +3,161 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Webgames Games</title>
+  <title>My Games</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <style>
     * {
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
     }
 
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background-color: #f0f0f0;
-      margin: 0;
+    html, body {
+      height: 100%;
+      width: 100%;
+      font-family: 'Inter', sans-serif;
+      color: #fff;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: background-image 1s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
-    h1 {
-      color: #222;
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 0;
+      backdrop-filter: blur(6px);
+    }
+
+    header {
+      z-index: 1;
       text-align: center;
       margin-bottom: 30px;
     }
 
-    .game-list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
+    header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.6);
     }
 
-    .game {
-      background: white;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 250px;
-      transition: transform 0.2s;
+    header p {
+      font-size: 1.2rem;
+      font-weight: 400;
+      margin-top: 10px;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
     }
 
-    .game:hover {
-      transform: translateY(-5px);
-    }
-
-    .game img {
-      width: 100%;
-      border-radius: 8px;
-    }
-
-    .game h3 {
-      margin: 10px 0 8px;
-      font-size: 18px;
+    .container {
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 30px 40px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       text-align: center;
     }
 
-    .game a {
-      display: block;
-      text-align: center;
-      margin-top: 8px;
-      padding: 10px 15px;
-      background: #007acc;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      font-size: 15px;
-    }
-
-    .game a:hover {
-      background: #005c99;
-    }
-
-    .home-button {
-      padding: 10px 15px;
-      background-color: #007acc;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      display: inline-block;
+    .container p {
+      font-size: 1.2rem;
       margin-bottom: 20px;
-      font-size: 16px;
+      color: #fff;
+      text-shadow: 0 0 3px #000;
     }
 
-    .home-button:hover {
-      background-color: #005c99;
+    a {
+      display: inline-block;
+      margin: 10px;
+      padding: 12px 30px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      color: white;
+      background: #00b3ff;
+      border-radius: 50px;
+      transition: 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 179, 255, 0.4);
     }
 
-    @media screen and (max-width: 600px) {
-      .game {
+    a:hover {
+      background: #0077b3;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      .container {
         width: 90%;
+        padding: 20px;
+      }
+
+      a {
+        padding: 10px 25px;
+        font-size: 0.9rem;
       }
     }
   </style>
 </head>
 <body>
 
-  <a href="https://inklinguy.github.io/mywebsite/" class="home-button">Home</a> <!-- Home button -->
+  <header>
+    <h1>These are my Roblox and Web Games</h1>
+    <p>Explore and play my awesome games!</p>
+  </header>
 
-  <h1>My Webgames Games</h1>
-
-  <div class="game-list">
-
-    <!-- SHARK GAME CARD -->
-    <div class="game">
-      <img src="https://static.vecteezy.com/system/resources/previews/013/537/020/non_2x/cartoon-drawing-of-a-shark-vector.jpg" alt="Shark Game">
-      <h3>Shark Adventure</h3>
-      <a href="https://inklinguy.github.io/mywebsite/Webgames/sharkgame">Play Game</a>
-    </div>
-
-    <!-- Add more games below using the same structure -->
-
+  <div class="container">
+    <p>Play my games here:</p>
+    <a href="games.html">Check Out My Roblox Games</a>
+    <a href="Webgames.html">Check Out My Web Games</a>
   </div>
+
+  <script>
+    // Define the path to the wimage folder
+    const imageBaseURL = 'https://inklinguy.github.io/mywebsite/wimage/';  // Path to the wimage folder
+    const imageExtensions = ['png', 'jpg', 'jpeg'];
+
+    // Fetch image list from the wimage folder
+    async function fetchImageList() {
+      try {
+        const res = await fetch('https://api.github.com/repos/Inklinguy/mywebsite/contents/wimage');  // Path to wimage folder
+        const files = await res.json();
+        return files
+          .filter(file => file.type === 'file')
+          .filter(file => imageExtensions.some(ext => file.name.toLowerCase().endsWith(ext)))
+          .map(file => imageBaseURL + encodeURIComponent(file.name));
+      } catch (err) {
+        console.error('Error fetching image list:', err);
+        return [];
+      }
+    }
+
+    // Start the background rotation with images from the wimage folder
+    async function startBackgroundRotation() {
+      const images = await fetchImageList();
+      if (images.length === 0) return;
+
+      let index = 0;
+      function rotate() {
+        document.body.style.backgroundImage = `url('${images[index]}')`;
+        index = (index + 1) % images.length;
+      }
+
+      rotate();
+      setInterval(rotate, 10000); // Rotate every 10 seconds
+    }
+
+    startBackgroundRotation();
+  </script>
 
 </body>
 </html>
