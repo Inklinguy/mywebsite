@@ -1,4 +1,4 @@
-// === Shark Game with Full Joystick Support and Mobile Restart ===
+// === Shark Game with Full Joystick Support, Mobile Restart, and Moving Clouds ===
 
 // Setup canvas
 const canvas = document.createElement('canvas');
@@ -256,6 +256,41 @@ function drawGameOver() {
   restartBtn.style.display = 'block';
 }
 
+// Clouds setup
+let clouds = [];
+
+function generateClouds() {
+  // Create new cloud every 150 frames
+  if (spawnTimer % 150 === 0) {
+    clouds.push({
+      x: WIDTH,
+      y: Math.random() * 100,  // Random height for variation
+      speed: Math.random() * 0.5 + 0.5, // Random speed between 0.5 and 1
+      width: 100 + Math.random() * 150, // Random width between 100 and 250
+      height: 40 + Math.random() * 30 // Random height between 40 and 70
+    });
+  }
+}
+
+function updateClouds() {
+  clouds.forEach(cloud => {
+    cloud.x -= cloud.speed;  // Move cloud left
+    if (cloud.x + cloud.width < 0) {
+      cloud.x = WIDTH;  // Reset cloud position when it goes off-screen
+      cloud.y = Math.random() * 100;  // Randomize vertical position
+    }
+  });
+}
+
+function drawClouds() {
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';  // Cloud color with transparency
+  clouds.forEach(cloud => {
+    ctx.beginPath();
+    ctx.ellipse(cloud.x, cloud.y, cloud.width / 2, cloud.height / 2, 0, 0, Math.PI * 2);
+    ctx.fill();
+  });
+}
+
 function spawnEntities() {
   if (spawnTimer % 90 === 0)
     fishes.push({ x: WIDTH + 20, y: HEIGHT / 3 + Math.random() * (HEIGHT - HEIGHT / 3 - 120), width: 40, height: 40 });
@@ -338,70 +373,3 @@ function handleCollisions() {
 
 function gameLoop() {
   if (gameOver) {
-    drawScene();
-    drawScore();
-    drawGameOver();
-    return;
-  }
-
-  WIDTH = canvas.width;
-  HEIGHT = canvas.height;
-
-  updateTerrain();
-  spawnEntities();
-  updateEntities();
-  handleCollisions();
-
-  if (score - lastScoreCheckpoint >= 30) {
-    gameTime += 20;
-    lastScoreCheckpoint = score;
-  }
-
-  if (shark.y < HEIGHT / 3) velocityY += gravityAir;
-  else velocityY += gravityAir * 0.15, velocityY *= 1 - dragWater;
-
-  velocityY = Math.max(-25, Math.min(velocityY, maxFallSpeed));
-  shark.y += velocityY;
-
-  while (sharkCollidesWithTerrain()) shark.y--, velocityY = 0, canJump = true;
-
-  if (joystickActive) updateMobileMovement();
-  else updateDesktopMovement();
-
-  if (shark.y + shark.height > HEIGHT) shark.y = HEIGHT - shark.height, velocityY = 0;
-  if (shark.y < 0) shark.y = 0;
-  if (shark.x < 0) shark.x = 0;
-  if (shark.x + shark.width > WIDTH) shark.x = WIDTH - shark.width;
-
-  gameTime -= 1 / 60;
-  if (gameTime <= 0) {
-    gameOver = true;
-    assets.gameoverSound.play();
-  }
-
-  drawScene();
-  drawScore();
-  spawnTimer++;
-  requestAnimationFrame(gameLoop);
-}
-
-function startGame() {
-  score = 0;
-  lastScoreCheckpoint = 0;
-  gameTime = 60;
-  gameOver = false;
-  fishes = [];
-  crabs = [];
-  seagulls = [];
-  orcas = [];
-  shark.x = 100;
-  shark.y = HEIGHT / 2;
-  velocityY = 0;
-  restartBtn.style.display = 'none';
-  generateTerrain();
-  gameLoop();
-}
-
-restartBtn.addEventListener('click', startGame);
-
-startGame();
