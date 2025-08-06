@@ -1,4 +1,4 @@
-// === Shark Game with Virtual Joystick and Screen Bounds ===
+// === Shark Game with Improved Joystick Tap-Jump and Boundaries ===
 
 // Setup canvas
 const canvas = document.createElement('canvas');
@@ -37,7 +37,6 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
-// Dimensions and constants
 let WIDTH = canvas.width;
 let HEIGHT = canvas.height;
 const AIR_COLOR = 'skyblue';
@@ -91,13 +90,14 @@ for (const [key, src] of Object.entries(soundSources)) {
   assets[key + 'Sound'] = snd;
 }
 
-// === Joystick Controls ===
+// === Joystick Controls (improved) ===
 let joystickActive = false;
 let joystickStartX = 0;
 let joystickStartY = 0;
 let joystickDX = 0;
 let joystickDY = 0;
 let jumpQueued = false;
+let tapTimeout = null;
 
 const joystickEl = document.getElementById('joystick');
 
@@ -106,6 +106,10 @@ joystickEl.addEventListener('touchstart', e => {
   const touch = e.touches[0];
   joystickStartX = touch.clientX;
   joystickStartY = touch.clientY;
+  joystickDX = 0;
+  joystickDY = 0;
+
+  tapTimeout = setTimeout(() => { tapTimeout = null; }, 150);
 }, { passive: false });
 
 joystickEl.addEventListener('touchmove', e => {
@@ -113,10 +117,15 @@ joystickEl.addEventListener('touchmove', e => {
   const touch = e.touches[0];
   joystickDX = touch.clientX - joystickStartX;
   joystickDY = touch.clientY - joystickStartY;
-  if (joystickDY < -30) jumpQueued = true;
 }, { passive: false });
 
 joystickEl.addEventListener('touchend', () => {
+  if (tapTimeout) {
+    jumpQueued = true;
+    clearTimeout(tapTimeout);
+    tapTimeout = null;
+  }
+
   joystickActive = false;
   joystickDX = 0;
   joystickDY = 0;
@@ -125,6 +134,7 @@ joystickEl.addEventListener('touchend', () => {
 function updateMobileMovement() {
   if (joystickDX < -20) shark.x -= sharkSpeed;
   if (joystickDX > 20) shark.x += sharkSpeed;
+
   if (jumpQueued && shark.y + shark.height >= HEIGHT - 1) {
     velocityY = -jumpForce;
     jumpQueued = false;
