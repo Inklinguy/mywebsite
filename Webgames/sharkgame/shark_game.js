@@ -430,6 +430,7 @@ function startGame() {
   orcas = [];
   generateTerrain();
   clouds = [];
+  restartBtn.style.display = 'none';
   gameLoop();
 }
 
