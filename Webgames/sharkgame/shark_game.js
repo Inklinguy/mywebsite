@@ -18,6 +18,10 @@ restartBtn.id = 'restartBtn';
 restartBtn.style.display = 'none';
 document.body.appendChild(restartBtn);
 
+restartBtn.addEventListener('click', () => {
+  startGame(); // Restart the game when the button is clicked
+});
+
 const style = document.createElement('style');
 style.innerHTML = `
   #joystick {
