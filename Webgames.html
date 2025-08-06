@@ -97,12 +97,11 @@
 </head>
 <body>
 
-  <a href="https://inklinguy.github.io/mywebsite/" class="home-button">Home</a> <!-- Home button -->
+  <a href="https://inklinguy.github.io/mywebsite/" class="home-button">Home</a>
 
   <h1>My Webgames Games</h1>
 
   <div class="game-list">
-
     <!-- SHARK GAME CARD -->
     <div class="game">
       <img src="https://static.vecteezy.com/system/resources/previews/013/537/020/non_2x/cartoon-drawing-of-a-shark-vector.jpg" alt="Shark Game">
@@ -111,19 +110,21 @@
     </div>
 
     <!-- Add more games below using the same structure -->
-
   </div>
 
   <script>
-    // Define the path to the wimages folder
-    const imageBaseURL = 'https://inklinguy.github.io/mywebsite/wimages/';  // Path to the wimages folder
+    const imageBaseURL = 'https://inklinguy.github.io/mywebsite/wimage/';
     const imageExtensions = ['png', 'jpg', 'jpeg'];
 
-    // Fetch image list from the wimages folder
     async function fetchImageList() {
       try {
-        const res = await fetch('https://api.github.com/repos/Inklinguy/mywebsite/contents/wimage');  // Path to wimages folder
+        const res = await fetch('https://api.github.com/repos/Inklinguy/mywebsite/contents/wimage');
         const files = await res.json();
+
+        if (!Array.isArray(files)) {
+          throw new Error('GitHub API did not return a file list');
+        }
+
         return files
           .filter(file => file.type === 'file')
           .filter(file => imageExtensions.some(ext => file.name.toLowerCase().endsWith(ext)))
@@ -134,7 +135,6 @@
       }
     }
 
-    // Start the background rotation with images from the wimages folder
     async function startBackgroundRotation() {
       const images = await fetchImageList();
       if (images.length === 0) return;
@@ -146,7 +146,7 @@
       }
 
       rotate();
-      setInterval(rotate, 10000); // Rotate every 10 seconds
+      setInterval(rotate, 10000); // every 10 seconds
     }
 
     startBackgroundRotation();
