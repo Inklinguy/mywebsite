@@ -228,49 +228,7 @@ function collides(a, b) {
   return a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
 }
 
-function drawScene() {
-  ctx.fillStyle = AIR_COLOR;
-  ctx.fillRect(0, 0, WIDTH, HEIGHT);
-  ctx.fillStyle = WATER_COLOR;
-  ctx.fillRect(0, HEIGHT / 3, WIDTH, HEIGHT);
-  drawTerrain();
-  ctx.drawImage(assets.shark, shark.x, shark.y, SHARK_WIDTH, SHARK_HEIGHT);
-  fishes.forEach(f => ctx.drawImage(assets.fish, f.x, f.y, 40, 40));
-  crabs.forEach(c => ctx.drawImage(assets.crab, c.x, c.y, 40, 40));
-  seagulls.forEach(s => ctx.drawImage(assets.seagull, s.x, s.y, 50, 40));
-  orcas.forEach(o => {
-    ctx.save();
-    if (o.direction === -1) ctx.scale(-1, 1);
-    ctx.drawImage(assets.orca, o.direction === -1 ? -o.x - o.width : o.x, o.y, o.width, o.height);
-    ctx.restore();
-  });
-  if (flashCounter > 0) {
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
-    ctx.fillRect(0, 0, WIDTH, HEIGHT);
-    flashCounter--;
-  }
-}
-
-function drawScore() {
-  ctx.fillStyle = 'black';
-  ctx.font = '24px Arial';
-  ctx.fillText(`Score: ${score}`, 10, 30);
-  ctx.font = '32px Arial';
-  ctx.fillText(`Time: ${Math.max(0, Math.floor(gameTime))}`, WIDTH - 150, 30);
-}
-
-function drawGameOver() {
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  ctx.fillRect(0, 0, WIDTH, HEIGHT);
-  ctx.fillStyle = 'white';
-  ctx.font = '48px Arial';
-  ctx.fillText('Game Over', WIDTH / 2 - 120, HEIGHT / 2 - 20);
-  ctx.font = '32px Arial';
-  ctx.fillText(`Final Score: ${score}`, WIDTH / 2 - 100, HEIGHT / 2 + 30);
-  restartBtn.style.display = 'block';
-}
-
-// Clouds setup
+// Cloud setup and updates
 let clouds = [];
 
 function generateClouds() {
@@ -310,6 +268,7 @@ function drawClouds() {
   });
 }
 
+// Spawning game entities
 function spawnEntities() {
   if (spawnTimer % 90 === 0)
     fishes.push({ x: WIDTH + 20, y: HEIGHT / 3 + Math.random() * (HEIGHT - HEIGHT / 3 - 120), width: 40, height: 40 });
@@ -334,6 +293,7 @@ function spawnEntities() {
   }
 }
 
+// Updating game entities
 function updateEntities() {
   const speed = 4;
   fishes.forEach(f => f.x -= speed);
@@ -352,6 +312,7 @@ function updateEntities() {
   orcas = orcas.filter(o => o.active);
 }
 
+// Handling collisions
 function handleCollisions() {
   fishes = fishes.filter(f => {
     if (collides(shark, f)) {
@@ -390,6 +351,7 @@ function handleCollisions() {
   });
 }
 
+// Main game loop
 function gameLoop() {
   if (gameOver) {
     drawScene();
@@ -402,7 +364,7 @@ function gameLoop() {
   spawnEntities();
   updateEntities();
   handleCollisions();
-  updateClouds();
+  updateClouds();  // Update cloud positions
 
   if (score - lastScoreCheckpoint >= 30) {
     gameTime += 20;
@@ -433,7 +395,7 @@ function gameLoop() {
 
   drawScene();
   drawScore();
-  drawClouds();
+  drawClouds();  // Draw clouds
   spawnTimer++;
   requestAnimationFrame(gameLoop);
 }
@@ -448,9 +410,9 @@ function startGame() {
   seagulls = [];
   orcas = [];
   generateTerrain();
-  clouds = [];
+  clouds = [];  // Reset clouds
   restartBtn.style.display = 'none';
   gameLoop();
 }
 
-startGame(); // This line starts the game loop
+startGame(); // Start the game loop
