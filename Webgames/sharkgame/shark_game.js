@@ -123,19 +123,24 @@ joystick.addEventListener('touchend', () => {
 }, { passive: false });
 
 function updateMobileMovement() {
+  // Left/Right movement
   if (joystickDX < -20) shark.x -= sharkSpeed;
   if (joystickDX > 20) shark.x += sharkSpeed;
 
+  // Up/Down movement
   if (joystickDY < -30) {
+    // Jump when in air
     if (shark.y < HEIGHT / 3) {
       if (canJump) {
         velocityY = -jumpForce;
         canJump = false;
       }
     } else {
+      // Swim upwards when in water
       velocityY -= swimForce;
     }
   } else if (joystickDY > 30) {
+    // Swim downwards
     velocityY += swimForce;
   }
 }
