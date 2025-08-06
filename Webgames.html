@@ -7,17 +7,23 @@
   <style>
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    body {
+    html, body {
+      height: 100%;
+      min-height: 100vh;
       font-family: Arial, sans-serif;
-      padding: 20px;
-      background-color: #f0f0f0;
-      margin: 0;
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
+      background-attachment: fixed;
       transition: background-image 1s ease-in-out;
+    }
+
+    body {
+      padding: 20px;
     }
 
     h1 {
