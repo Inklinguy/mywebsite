@@ -1,4 +1,4 @@
-// === Shark Game JavaScript Port (Improved Spawning + Points + Orca Fix) ===
+// === Shark Game with Virtual Joystick and Screen Bounds ===
 
 // Setup canvas
 const canvas = document.createElement('canvas');
@@ -7,19 +7,39 @@ document.body.style.overflow = 'hidden';
 document.body.appendChild(canvas);
 const ctx = canvas.getContext('2d');
 
-// Adjust canvas size based on window dimensions
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+// Joystick UI
+const joystick = document.createElement('div');
+joystick.id = 'joystick';
+document.body.appendChild(joystick);
 
-window.addEventListener("resize", function() {
+const style = document.createElement('style');
+style.innerHTML = `
+  #joystick {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid white;
+    border-radius: 50%;
+    touch-action: none;
+    z-index: 9999;
+  }
+`;
+document.head.appendChild(style);
+
+// Resize canvas
+function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-});
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
-// Canvas dimensions
-const WIDTH = canvas.width;
-const HEIGHT = canvas.height;
-
+// Dimensions and constants
+let WIDTH = canvas.width;
+let HEIGHT = canvas.height;
 const AIR_COLOR = 'skyblue';
 const WATER_COLOR = '#006992';
 
@@ -38,12 +58,7 @@ let canJump = true;
 
 let terrainHeights = [];
 let terrainOffset = 0;
-
-let fishes = [];
-let crabs = [];
-let seagulls = [];
-let orcas = [];
-
+let fishes = [], crabs = [], seagulls = [], orcas = [];
 let score = 0;
 let gameTime = 60;
 let gameOver = false;
@@ -76,62 +91,47 @@ for (const [key, src] of Object.entries(soundSources)) {
   assets[key + 'Sound'] = snd;
 }
 
-// Mobile Controls (FIXED)
-let moveLeft = false;
-let moveRight = false;
+// === Joystick Controls ===
+let joystickActive = false;
+let joystickStartX = 0;
+let joystickStartY = 0;
+let joystickDX = 0;
+let joystickDY = 0;
 let jumpQueued = false;
 
-function isMobile() {
-  return window.innerWidth <= 768;
-}
+const joystickEl = document.getElementById('joystick');
 
-let isMobileDevice = isMobile();
+joystickEl.addEventListener('touchstart', e => {
+  joystickActive = true;
+  const touch = e.touches[0];
+  joystickStartX = touch.clientX;
+  joystickStartY = touch.clientY;
+}, { passive: false });
 
-if (isMobileDevice) {
-  document.addEventListener("touchstart", handleTouchStart);
-  document.addEventListener("touchend", handleTouchEnd);
-}
+joystickEl.addEventListener('touchmove', e => {
+  if (!joystickActive) return;
+  const touch = e.touches[0];
+  joystickDX = touch.clientX - joystickStartX;
+  joystickDY = touch.clientY - joystickStartY;
+  if (joystickDY < -30) jumpQueued = true;
+}, { passive: false });
 
-function handleTouchStart(event) {
-  for (let i = 0; i < event.touches.length; i++) {
-    const touch = event.touches[i];
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-
-    if (touch.clientY > screenHeight / 2) {
-      jumpQueued = true;
-    }
-
-    if (touch.clientX < screenWidth / 2) {
-      moveLeft = true;
-    } else {
-      moveRight = true;
-    }
-  }
-}
-
-function handleTouchEnd(event) {
-  if (event.touches.length === 0) {
-    moveLeft = false;
-    moveRight = false;
-    jumpQueued = false;
-  }
-}
+joystickEl.addEventListener('touchend', () => {
+  joystickActive = false;
+  joystickDX = 0;
+  joystickDY = 0;
+}, { passive: false });
 
 function updateMobileMovement() {
-  if (moveLeft) {
-    shark.x -= sharkSpeed;
-  }
-  if (moveRight) {
-    shark.x += sharkSpeed;
-  }
-  if (jumpQueued && shark.y + shark.height === HEIGHT) {
+  if (joystickDX < -20) shark.x -= sharkSpeed;
+  if (joystickDX > 20) shark.x += sharkSpeed;
+  if (jumpQueued && shark.y + shark.height >= HEIGHT - 1) {
     velocityY = -jumpForce;
     jumpQueued = false;
   }
 }
 
-// Desktop Controls (Arrow Keys)
+// === Desktop Controls ===
 let keys = {};
 document.addEventListener('keydown', e => {
   keys[e.key] = true;
@@ -155,7 +155,7 @@ function updateDesktopMovement() {
   if (keys['ArrowRight']) shark.x += sharkSpeed;
 }
 
-// Terrain generation
+// === Terrain ===
 function generateTerrain() {
   const base = HEIGHT - 150;
   let last = base;
@@ -258,7 +258,7 @@ function spawnEntities() {
     const direction = Math.random() < 0.5 ? -1 : 1;
     const newOrca = {
       active: true,
-      direction: direction,
+      direction,
       x: direction === -1 ? WIDTH + 200 : -200,
       y: HEIGHT / 3 + Math.random() * (HEIGHT - HEIGHT / 3 - 120),
       width: 160,
@@ -333,6 +333,9 @@ function gameLoop() {
     return;
   }
 
+  WIDTH = canvas.width;
+  HEIGHT = canvas.height;
+
   updateTerrain();
   spawnEntities();
   updateEntities();
@@ -348,15 +351,20 @@ function gameLoop() {
 
   velocityY = Math.max(-25, Math.min(velocityY, maxFallSpeed));
   shark.y += velocityY;
-  if (shark.y + shark.height > HEIGHT) shark.y = HEIGHT - shark.height, velocityY = 0;
 
   while (sharkCollidesWithTerrain()) shark.y--, velocityY = 0, canJump = true;
 
-  if (isMobileDevice) {
+  if (joystickActive) {
     updateMobileMovement();
   } else {
     updateDesktopMovement();
   }
+
+  // Clamp shark to screen
+  if (shark.y + shark.height > HEIGHT) shark.y = HEIGHT - shark.height, velocityY = 0;
+  if (shark.y < 0) shark.y = 0;
+  if (shark.x < 0) shark.x = 0;
+  if (shark.x + shark.width > WIDTH) shark.x = WIDTH - shark.width;
 
   gameTime -= 1 / 60;
   if (gameTime <= 0) {
