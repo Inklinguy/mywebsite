@@ -122,7 +122,7 @@
     // Fetch image list from the wimages folder
     async function fetchImageList() {
       try {
-        const res = await fetch('https://api.github.com/repos/Inklinguy/mywebsite/contents/wimages');  // Path to wimages folder
+        const res = await fetch('https://api.github.com/repos/Inklinguy/mywebsite/contents/wimage');  // Path to wimages folder
         const files = await res.json();
         return files
           .filter(file => file.type === 'file')
