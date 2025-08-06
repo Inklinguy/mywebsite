@@ -44,6 +44,7 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
+// Resize canvas based on window size
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
