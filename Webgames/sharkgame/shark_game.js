@@ -277,7 +277,7 @@ function drawGameOver() {
   ctx.fillText(`Final Score: ${score}`, WIDTH / 2, startY + 30);
   ctx.fillText(`Hit 'R' to restart`, WIDTH / 2, startY + 70);
 
-  restartBtn.style.top = '10%'; // Keep button in the top third
+  restartBtn.style.top = '13%'; // Keep button in the top third
   restartBtn.style.left = '50%';
   restartBtn.style.transform = 'translate(-50%, 0)';
   restartBtn.style.display = 'block';
