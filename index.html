@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Welcome to My Website</title>
   <style>
     * {
@@ -13,13 +13,16 @@
 
     body {
       font-family: 'Arial', sans-serif;
-      background-color: #f0f0f0;
       color: #333;
       line-height: 1.6;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: background-image 1s ease-in-out;
     }
 
     header {
-      background-color: #1a1a1a;
+      background-color: rgba(0, 0, 0, 0.6);
       color: white;
       padding: 40px 20px;
       text-align: center;
@@ -42,6 +45,8 @@
       max-width: 1200px;
       margin: 0 auto;
       text-align: center;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 20px;
     }
 
     a {
@@ -112,6 +117,41 @@
     <a href="games.html">Check Out My Roblox Games</a>
     <a href="Webgames.html">Check Out My Web Games</a>
   </div>
+
+  <script>
+    const imageBaseURL = 'https://inklinguy.github.io/mywebsite/images/';
+    const imageExtensions = ['png', 'jpg', 'jpeg'];
+
+    async function fetchImageList() {
+      try {
+        const res = await fetch('https://api.github.com/repos/Inklinguy/mywebsite/contents/images');
+        const files = await res.json();
+        return files
+          .filter(file => file.type === 'file')
+          .filter(file => imageExtensions.some(ext => file.name.toLowerCase().endsWith(ext)))
+          .map(file => imageBaseURL + encodeURIComponent(file.name));
+      } catch (err) {
+        console.error('Error fetching image list:', err);
+        return [];
+      }
+    }
+
+    async function startBackgroundRotation() {
+      const images = await fetchImageList();
+      if (images.length === 0) return;
+
+      let index = 0;
+      function rotate() {
+        document.body.style.backgroundImage = `url('${images[index]}')`;
+        index = (index + 1) % images.length;
+      }
+
+      rotate();
+      setInterval(rotate, 10000); // Rotate every 10 seconds
+    }
+
+    startBackgroundRotation();
+  </script>
 
 </body>
 </html>
