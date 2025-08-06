@@ -29,10 +29,10 @@ const shark = { x: 100, y: HEIGHT / 2, width: SHARK_WIDTH, height: SHARK_HEIGHT 
 
 let velocityY = 0;
 const sharkSpeed = 7;
-const gravityAir = 0.65;  // Reduced gravity for easier jumping
+const gravityAir = 0.65;
 const dragWater = 0.1;
 const swimForce = 1.1;
-const jumpForce = 20;  // Increased jump force for higher jumps
+const jumpForce = 20;
 const maxFallSpeed = 10;
 let canJump = true;
 
@@ -42,7 +42,7 @@ let terrainOffset = 0;
 let fishes = [];
 let crabs = [];
 let seagulls = [];
-let orcas = []; // Changed orca to an array to hold multiple orcas
+let orcas = [];
 
 let score = 0;
 let gameTime = 60;
@@ -76,17 +76,15 @@ for (const [key, src] of Object.entries(soundSources)) {
   assets[key + 'Sound'] = snd;
 }
 
-// Mobile Controls
+// Mobile Controls (FIXED)
 let moveLeft = false;
 let moveRight = false;
-let jump = false;
+let jumpQueued = false;
 
-// Function to detect if the device is mobile
 function isMobile() {
   return window.innerWidth <= 768;
 }
 
-// Switch between mobile and desktop controls based on the device
 let isMobileDevice = isMobile();
 
 if (isMobileDevice) {
@@ -95,37 +93,41 @@ if (isMobileDevice) {
 }
 
 function handleTouchStart(event) {
-  const touch = event.touches[0];
-  const screenWidth = window.innerWidth;
+  for (let i = 0; i < event.touches.length; i++) {
+    const touch = event.touches[i];
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
 
-  // Detect left side for move left, right side for move right
-  if (touch.clientX < screenWidth / 2) {
-    moveLeft = true;
-  } else {
-    moveRight = true;
-  }
+    if (touch.clientY > screenHeight / 2) {
+      jumpQueued = true;
+    }
 
-  // Detect if the touch is in the lower half of the screen for jump
-  if (touch.clientY > window.innerHeight / 2) {
-    jump = true;
+    if (touch.clientX < screenWidth / 2) {
+      moveLeft = true;
+    } else {
+      moveRight = true;
+    }
   }
 }
 
-function handleTouchEnd() {
-  moveLeft = false;
-  moveRight = false;
-  jump = false;
+function handleTouchEnd(event) {
+  if (event.touches.length === 0) {
+    moveLeft = false;
+    moveRight = false;
+    jumpQueued = false;
+  }
 }
 
 function updateMobileMovement() {
   if (moveLeft) {
-    shark.x -= sharkSpeed;  // Move left
+    shark.x -= sharkSpeed;
   }
   if (moveRight) {
-    shark.x += sharkSpeed;  // Move right
+    shark.x += sharkSpeed;
   }
-  if (jump && shark.y + shark.height === HEIGHT) {
-    velocityY = -jumpForce;  // Make shark jump
+  if (jumpQueued && shark.y + shark.height === HEIGHT) {
+    velocityY = -jumpForce;
+    jumpQueued = false;
   }
 }
 
@@ -140,46 +142,41 @@ document.addEventListener('keyup', e => keys[e.key] = false);
 function updateDesktopMovement() {
   if (keys['ArrowUp']) {
     if (shark.y < HEIGHT / 3) {
-      // In air — normal jump
       if (canJump) {
         velocityY = -jumpForce;
         canJump = false;
       }
     } else {
-      // In water — swim upward
       velocityY -= swimForce;
     }
   }
-
   if (keys['ArrowDown']) velocityY += swimForce;
   if (keys['ArrowLeft']) shark.x -= sharkSpeed;
   if (keys['ArrowRight']) shark.x += sharkSpeed;
 }
 
-// Function to generate terrain heights
+// Terrain generation
 function generateTerrain() {
-  const base = HEIGHT - 150;  // Start the terrain further down (lower base)
+  const base = HEIGHT - 150;
   let last = base;
   terrainHeights = [];
   for (let x = 0; x < WIDTH; x++) {
-    let change = Math.floor(Math.random() * 21) - 10;  // Random fluctuation
-    last = Math.max(HEIGHT / 2 + 15, Math.min(HEIGHT - 100, last + change)); // Keep it within a lower range
+    let change = Math.floor(Math.random() * 21) - 10;
+    last = Math.max(HEIGHT / 2 + 15, Math.min(HEIGHT - 100, last + change));
     terrainHeights.push(last);
   }
 }
 
-// Function to update terrain (for scrolling/animating terrain)
 function updateTerrain() {
   terrainHeights = terrainHeights.slice(2);
   let last = terrainHeights[terrainHeights.length - 1];
   for (let i = 0; i < 2; i++) {
-    let change = Math.floor(Math.random() * 21) - 10; 
-    last = Math.max(HEIGHT / 2 + 20, Math.min(HEIGHT - 100, last + change));  // Keep it consistently lower
+    let change = Math.floor(Math.random() * 21) - 10;
+    last = Math.max(HEIGHT / 2 + 20, Math.min(HEIGHT - 100, last + change));
     terrainHeights.push(last);
   }
 }
 
-// Function to draw terrain
 function drawTerrain() {
   const terrainPoints = terrainHeights.map((y, x) => ({ x, y }));
   terrainPoints.push({ x: WIDTH, y: HEIGHT }, { x: 0, y: HEIGHT });
@@ -187,11 +184,10 @@ function drawTerrain() {
   ctx.moveTo(terrainPoints[0].x, terrainPoints[0].y);
   terrainPoints.forEach(point => ctx.lineTo(point.x, point.y));
   ctx.closePath();
-  ctx.fillStyle = '#3C2C1E';  // Terrain color
+  ctx.fillStyle = '#3C2C1E';
   ctx.fill();
 }
 
-// Function to check if shark collides with terrain
 function sharkCollidesWithTerrain() {
   const sharkBottom = shark.y + shark.height;
   for (let x = Math.floor(shark.x); x < shark.x + shark.width; x++) {
@@ -248,25 +244,23 @@ function drawGameOver() {
   ctx.fillText('Press R to Restart', WIDTH / 2 - 110, HEIGHT / 2 + 70);
 }
 
-// Updated spawnEntities function
 function spawnEntities() {
-  if (spawnTimer % 90 === 0) 
+  if (spawnTimer % 90 === 0)
     fishes.push({ x: WIDTH + 20, y: HEIGHT / 3 + Math.random() * (HEIGHT - HEIGHT / 3 - 120), width: 40, height: 40 });
-  
-  if (spawnTimer % 240 === 0) 
+
+  if (spawnTimer % 240 === 0)
     crabs.push({ x: WIDTH + 20, y: terrainHeights[WIDTH - 1] - 40, width: 40, height: 40 });
 
-  if (spawnTimer % 400 === 0) 
+  if (spawnTimer % 400 === 0)
     seagulls.push({ x: WIDTH + 20, y: Math.random() * (HEIGHT / 3 - 40), width: 50, height: 40 });
 
-  // Spawn Orcas one at a time and alternate direction
   if (spawnTimer % 400 === 0) {
-    const direction = Math.random() < 0.5 ? -1 : 1; // Randomly decide left (-1) or right (1)
+    const direction = Math.random() < 0.5 ? -1 : 1;
     const newOrca = {
       active: true,
       direction: direction,
-      x: direction === -1 ? WIDTH + 200 : -200, // Spawn from the correct direction
-      y: HEIGHT / 3 + Math.random() * (HEIGHT - HEIGHT / 3 - 120), // Adjust vertical spawn height
+      x: direction === -1 ? WIDTH + 200 : -200,
+      y: HEIGHT / 3 + Math.random() * (HEIGHT - HEIGHT / 3 - 120),
       width: 160,
       height: 100
     };
@@ -289,7 +283,7 @@ function updateEntities() {
   fishes = fishes.filter(f => f.x + f.width > 0);
   crabs = crabs.filter(c => c.x + c.width > 0);
   seagulls = seagulls.filter(s => s.x + s.width > 0);
-  orcas = orcas.filter(o => o.active); // Filter out inactive orcas
+  orcas = orcas.filter(o => o.active);
 }
 
 function handleCollisions() {
@@ -325,8 +319,8 @@ function handleCollisions() {
   orcas.forEach(o => {
     if (collides(shark, o)) {
       flashCounter = 10;
-      score = 0; // Reset the score when colliding with orca
-      assets.hitSound.play(); // Play hit sound
+      score = 0;
+      assets.hitSound.play();
     }
   });
 }
@@ -351,6 +345,7 @@ function gameLoop() {
 
   if (shark.y < HEIGHT / 3) velocityY += gravityAir;
   else velocityY += gravityAir * 0.15, velocityY *= 1 - dragWater;
+
   velocityY = Math.max(-25, Math.min(velocityY, maxFallSpeed));
   shark.y += velocityY;
   if (shark.y + shark.height > HEIGHT) shark.y = HEIGHT - shark.height, velocityY = 0;
@@ -358,9 +353,9 @@ function gameLoop() {
   while (sharkCollidesWithTerrain()) shark.y--, velocityY = 0, canJump = true;
 
   if (isMobileDevice) {
-    updateMobileMovement();  // Use mobile controls
+    updateMobileMovement();
   } else {
-    updateDesktopMovement(); // Use desktop controls
+    updateDesktopMovement();
   }
 
   gameTime -= 1 / 60;
@@ -383,7 +378,7 @@ function startGame() {
   fishes = [];
   crabs = [];
   seagulls = [];
-  orcas = []; // Reset orca array at the start
+  orcas = [];
   generateTerrain();
   gameLoop();
 }
