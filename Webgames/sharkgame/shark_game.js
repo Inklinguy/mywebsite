@@ -434,4 +434,4 @@ function startGame() {
   gameLoop();
 }
 
-startGame();
+startGame(); // This line starts the game loop
