@@ -7,13 +7,24 @@
   <style>
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      transition: background-image 1s ease-in-out;
     }
 
     body {
-      font-family: Arial, sans-serif;
       padding: 20px;
       background-color: #f4f4f4;
-      margin: 0;
     }
 
     h1 {
@@ -67,7 +78,6 @@
       background: #0077b3;
     }
 
-    /* Home Button */
     .home-button {
       padding: 10px 15px;
       background-color: #007acc;
@@ -83,7 +93,6 @@
       background-color: #005c99;
     }
 
-    /* Responsive for mobile */
     @media screen and (max-width: 600px) {
       .game {
         width: 90%;
@@ -102,7 +111,7 @@
 </head>
 <body>
 
-  <a href="https://inklinguy.github.io/mywebsite/" class="home-button">Home</a> <!-- Home button -->
+  <a href="https://inklinguy.github.io/mywebsite/" class="home-button">Home</a>
 
   <h1>My Roblox Games</h1>
 
@@ -125,6 +134,46 @@
       <a href="https://www.roblox.com/games/101772921653305/HPL-Battles" target="_blank">Play on Roblox</a>
     </div>
   </div>
+
+  <script>
+    const imageBaseURL = 'https://inklinguy.github.io/mywebsite/rimages/';
+    const imageExtensions = ['png', 'jpg', 'jpeg'];
+
+    async function fetchImageList() {
+      try {
+        const res = await fetch('https://api.github.com/repos/Inklinguy/mywebsite/contents/rimages');
+        const files = await res.json();
+
+        if (!Array.isArray(files)) {
+          throw new Error('GitHub API did not return a file list');
+        }
+
+        return files
+          .filter(file => file.type === 'file')
+          .filter(file => imageExtensions.some(ext => file.name.toLowerCase().endsWith(ext)))
+          .map(file => imageBaseURL + encodeURIComponent(file.name));
+      } catch (err) {
+        console.error('Error fetching image list:', err);
+        return [];
+      }
+    }
+
+    async function startBackgroundRotation() {
+      const images = await fetchImageList();
+      if (images.length === 0) return;
+
+      let index = 0;
+      function rotate() {
+        document.body.style.backgroundImage = `url('${images[index]}')`;
+        index = (index + 1) % images.length;
+      }
+
+      rotate();
+      setInterval(rotate, 10000); // every 10 seconds
+    }
+
+    startBackgroundRotation();
+  </script>
 
 </body>
 </html>
