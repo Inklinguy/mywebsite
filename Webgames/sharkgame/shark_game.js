@@ -36,7 +36,7 @@ style.innerHTML = `
     position: absolute;
     top: 25%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, 0%);
     font-size: 32px;
     padding: 20px 40px;
     background-color: #1E90FF;
