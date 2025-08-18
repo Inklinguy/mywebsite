@@ -1,4 +1,4 @@
-kp<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -24,7 +24,8 @@ kp<!DOCTYPE html>
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
+      padding-top: 30px;
     }
 
     body::before {
@@ -43,13 +44,13 @@ kp<!DOCTYPE html>
     }
 
     header h1 {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       font-weight: 700;
       text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.6);
     }
 
     header p {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: 400;
       margin-top: 10px;
       text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
@@ -57,20 +58,21 @@ kp<!DOCTYPE html>
 
     .container {
       z-index: 1;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 25px;
       padding: 30px 40px;
-      backdrop-filter: blur(0px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
       text-align: center;
       max-width: 95%;
+      margin-bottom: 30px;
     }
 
     .container p {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       margin-bottom: 20px;
       color: #fff;
-      text-shadow: 0 0 3px #000;
+      text-shadow: 0 0 4px #000;
     }
 
     a.button {
@@ -78,22 +80,44 @@ kp<!DOCTYPE html>
       margin: 10px;
       padding: 12px 30px;
       font-size: 1rem;
-      font-weight: 600;
+      font-weight: 700;
       text-decoration: none;
-      color: white;
-      background: #00b3ff;
+      color: #fff;
       border-radius: 50px;
-      transition: 0.3s ease;
-      box-shadow: 0 4px 15px rgba(0, 179, 255, 0.4);
-      max-width: 90%;
+      background: linear-gradient(135deg, #00b3ff, #0077b3);
+      box-shadow: 0 6px 20px rgba(0, 179, 255, 0.5);
+      transition: all 0.3s ease;
+      letter-spacing: 0.5px;
     }
 
     a.button:hover {
-      background: #0077b3;
-      transform: translateY(-2px);
+      background: linear-gradient(135deg, #0077b3, #00b3ff);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 10px 25px rgba(0, 179, 255, 0.6);
     }
 
-    @media (max-width: 600px) {
+    a.map-button {
+      background: linear-gradient(135deg, #ff7f50, #ff4500);
+      box-shadow: 0 6px 20px rgba(255, 69, 0, 0.5);
+    }
+
+    a.map-button:hover {
+      background: linear-gradient(135deg, #ff4500, #ff7f50);
+      box-shadow: 0 10px 25px rgba(255, 69, 0, 0.6);
+      transform: translateY(-3px) scale(1.05);
+    }
+
+    .map-frame {
+      width: 100%;
+      max-width: 1200px;
+      height: 600px;
+      border: 0;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      margin-bottom: 50px;
+    }
+
+    @media (max-width: 768px) {
       header h1 {
         font-size: 1.8rem;
       }
@@ -105,7 +129,21 @@ kp<!DOCTYPE html>
 
       a.button {
         padding: 10px 25px;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
+      }
+
+      .map-frame {
+        height: 400px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header h1 {
+        font-size: 1.5rem;
+      }
+
+      .map-frame {
+        height: 300px;
       }
     }
   </style>
@@ -125,45 +163,17 @@ kp<!DOCTYPE html>
     <a href="https://inklinguy.github.io/eddiesmap/Coolest_Locations-checkpoint.html" 
        target="_blank" 
        rel="noopener noreferrer"
-       class="button">
+       class="button map-button">
        Open the Coolest Locations Map
     </a>
   </div>
 
-  <script>
-    const imageBaseURL = 'https://inklinguy.github.io/mywebsite/images/';
-    const imageExtensions = ['png', 'jpg', 'jpeg'];
-
-    async function fetchImageList() {
-      try {
-        const res = await fetch('https://api.github.com/repos/Inklinguy/mywebsite/contents/images');
-        const files = await res.json();
-        return files
-          .filter(file => file.type === 'file')
-          .filter(file => imageExtensions.some(ext => file.name.toLowerCase().endsWith(ext)))
-          .map(file => imageBaseURL + encodeURIComponent(file.name));
-      } catch (err) {
-        console.error('Error fetching image list:', err);
-        return [];
-      }
-    }
-
-    async function startBackgroundRotation() {
-      const images = await fetchImageList();
-      if (images.length === 0) return;
-
-      let index = 0;
-      function rotate() {
-        document.body.style.backgroundImage = `url('${images[index]}')`;
-        index = (index + 1) % images.length;
-      }
-
-      rotate();
-      setInterval(rotate, 10000); // rotate every 10 sec
-    }
-
-    startBackgroundRotation();
-  </script>
+  <!-- Embedded Map -->
+  <iframe 
+    class="map-frame" 
+    src="https://inklinguy.github.io/eddiesmap/Coolest_Locations-checkpoint.html" 
+    allowfullscreen>
+  </iframe>
 
 </body>
 </html>
