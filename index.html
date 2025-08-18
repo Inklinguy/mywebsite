@@ -72,7 +72,7 @@
       text-shadow: 0 0 3px #000;
     }
 
-    a, .map-button {
+    a {
       display: inline-block;
       margin: 10px;
       padding: 12px 30px;
@@ -84,12 +84,18 @@
       border-radius: 50px;
       transition: 0.3s ease;
       box-shadow: 0 4px 15px rgba(0, 179, 255, 0.4);
-      cursor: pointer;
     }
 
-    a:hover, .map-button:hover {
+    a:hover {
       background: #0077b3;
       transform: translateY(-2px);
+    }
+
+    /* New map button style */
+    .map-button {
+      display: block;
+      margin-top: 20px;
+      background: #ff8800;
     }
 
     @media (max-width: 600px) {
@@ -102,7 +108,7 @@
         padding: 20px;
       }
 
-      a, .map-button {
+      a {
         padding: 10px 25px;
         font-size: 0.9rem;
       }
@@ -120,7 +126,7 @@
     <p>Play my games here:</p>
     <a href="games.html">Check Out My Roblox Games</a>
     <a href="Webgames.html">Check Out My Web Games</a>
-    <!-- New Button to Coolest Locations Map -->
+    <!-- NEW MAP BUTTON -->
     <a href="https://inklinguy.github.io/eddiesmap/Coolest_Locations.html" target="_blank" class="map-button">
       View Coolest Locations Map
     </a>
