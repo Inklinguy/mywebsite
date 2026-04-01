@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Games & Map</title>
+  <title>My Games, Certifyd & Map</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -13,7 +13,7 @@
     }
 
     html, body {
-      height: 100%;
+      min-height: 100%;
       width: 100%;
       font-family: 'Inter', sans-serif;
       color: #fff;
@@ -21,25 +21,28 @@
       background-position: center;
       background-repeat: no-repeat;
       transition: background-image 1s ease-in-out;
+    }
+
+    body {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
+      padding: 40px 16px;
     }
 
     body::before {
       content: "";
       position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
+      inset: 0;
       background: rgba(0, 0, 0, 0.3);
       z-index: 0;
-      backdrop-filter: blur(0px);
     }
 
     header {
       z-index: 1;
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 24px;
     }
 
     header h1 {
@@ -57,25 +60,42 @@
 
     .container {
       z-index: 1;
-      background: rgba(255, 255, 255, 0.1);
+      width: min(1100px, 96%);
+      background: rgba(255, 255, 255, 0.12);
       border-radius: 20px;
-      padding: 30px 40px;
-      backdrop-filter: blur(0px);
+      padding: 28px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       text-align: center;
-      max-width: 95%;
     }
 
     .container p {
-      font-size: 1.2rem;
-      margin-bottom: 20px;
+      font-size: 1.1rem;
+      margin: 18px 0 14px;
       color: #fff;
       text-shadow: 0 0 3px #000;
     }
 
+    .embed-frame {
+      width: 100%;
+      height: 70vh;
+      min-height: 500px;
+      border: 0;
+      border-radius: 16px;
+      background: #fff;
+      margin: 0 auto 24px;
+      display: block;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
     a.button {
       display: inline-block;
-      margin: 10px;
       padding: 12px 30px;
       font-size: 1rem;
       font-weight: 600;
@@ -93,19 +113,28 @@
       transform: translateY(-2px);
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 700px) {
+      body {
+        padding: 24px 12px;
+      }
+
       header h1 {
         font-size: 1.8rem;
       }
 
       .container {
-        width: 90%;
-        padding: 20px;
+        padding: 18px;
+      }
+
+      .embed-frame {
+        height: 60vh;
+        min-height: 420px;
       }
 
       a.button {
-        padding: 10px 25px;
-        font-size: 0.9rem;
+        width: 100%;
+        padding: 10px 20px;
+        font-size: 0.95rem;
       }
     }
   </style>
@@ -113,21 +142,45 @@
 <body>
 
   <header>
-    <h1>These are my Roblox and Web Games</h1>
-    <p>Explore and play my awesome games!</p>
+    <h1>These are my Roblox, Web Games, and Certifyd Page</h1>
+    <p>Explore my games, my page, and my coolest locations map.</p>
   </header>
 
   <div class="container">
+    <p>My Certifyd page:</p>
+
+    <iframe
+      src="https://certifyd2.inklinguy.pro/u/david"
+      title="David on Certifyd"
+      loading="lazy"
+      referrerpolicy="strict-origin-when-cross-origin"
+      class="embed-frame">
+    </iframe>
+
+    <div class="buttons">
+      <a href="https://certifyd2.inklinguy.pro/u/david"
+         target="_blank"
+         rel="noopener noreferrer"
+         class="button">
+         Open My Certifyd Page in a New Tab
+      </a>
+    </div>
+
     <p>Play my games here:</p>
-    <a href="games.html" class="button">Check Out My Roblox Games</a>
-    <a href="Webgames.html" class="button">Check Out My Web Games</a>
+    <div class="buttons">
+      <a href="games.html" class="button">Check Out My Roblox Games</a>
+      <a href="Webgames.html" class="button">Check Out My Web Games</a>
+    </div>
+
     <p>Or view my Coolest Locations map:</p>
-    <a href="https://inklinguy.github.io/eddiesmap/Coolest_Locations-checkpoint.html" 
-       target="_blank" 
-       rel="noopener noreferrer"
-       class="button">
-       Open the Coolest Locations Map
-    </a>
+    <div class="buttons">
+      <a href="https://inklinguy.github.io/eddiesmap/Coolest_Locations-checkpoint.html"
+         target="_blank"
+         rel="noopener noreferrer"
+         class="button">
+         Open the Coolest Locations Map
+      </a>
+    </div>
   </div>
 
   <script>
@@ -159,7 +212,7 @@
       }
 
       rotate();
-      setInterval(rotate, 10000); // rotate every 10 sec
+      setInterval(rotate, 10000);
     }
 
     startBackgroundRotation();
