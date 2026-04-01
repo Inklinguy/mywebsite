@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -152,4 +153,420 @@
       color: var(--muted);
     }
 
-   
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 18px rgba(139,255,111,0.9);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 18px;
+    }
+
+    .left,
+    .right,
+    .panel {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+    }
+
+    .left {
+      border-radius: 34px;
+      padding: 34px;
+      min-height: 760px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .left::before {
+      content: "";
+      position: absolute;
+      inset: auto auto -120px -90px;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(139,255,111,0.18), transparent 70%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: var(--green);
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 22px 0 18px;
+      font-family: "Orbitron", sans-serif;
+      font-size: clamp(3rem, 6vw, 6.5rem);
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+      max-width: 9ch;
+      text-transform: uppercase;
+    }
+
+    .lede {
+      max-width: 58ch;
+      font-size: 1.08rem;
+      line-height: 1.7;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 54px;
+      padding: 0 20px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 800;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+      border: 1px solid transparent;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button.primary {
+      color: #061009;
+      background: linear-gradient(135deg, var(--green), #d5ff86);
+      box-shadow: 0 16px 36px rgba(139,255,111,0.24);
+    }
+
+    .button.secondary {
+      color: var(--text);
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .mini-card {
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .mini-kicker {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 10px;
+      font-weight: 800;
+    }
+
+    .mini-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.4rem;
+      line-height: 1.08;
+    }
+
+    .mini-card p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .right {
+      border-radius: 34px;
+      padding: 18px;
+      min-height: 760px;
+      display: flex;
+      flex-direction: column;
+      background:
+        linear-gradient(180deg, rgba(10, 22, 16, 0.72), rgba(6, 14, 10, 0.9));
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 6px 14px;
+    }
+
+    .panel-title {
+      margin: 0;
+      font-family: "Orbitron", sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #eaffdf;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: var(--cyan);
+      border: 1px solid rgba(94, 242, 255, 0.22);
+      background: rgba(94, 242, 255, 0.08);
+      font-weight: 800;
+    }
+
+    .screen {
+      position: relative;
+      flex: 1;
+      min-height: 520px;
+      border-radius: 26px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: #050806;
+    }
+
+    .screen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(139,255,111,0.08), transparent 18%),
+        linear-gradient(0deg, rgba(94,242,255,0.07), transparent 16%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: #050806;
+    }
+
+    .panel-footer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .bottom-note {
+      margin-top: 16px;
+      padding: 16px 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 1080px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .left,
+      .right {
+        min-height: auto;
+      }
+
+      h1 {
+        max-width: none;
+      }
+    }
+
+    @media (max-width: 780px) {
+      .grid-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .left,
+      .right {
+        border-radius: 24px;
+      }
+
+      .left {
+        padding: 22px 18px;
+      }
+
+      h1 {
+        font-size: 2.6rem;
+      }
+
+      .cta-row,
+      .panel-footer {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .screen {
+        min-height: 62vh;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg" id="bg"></div>
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+  <div class="orb three"></div>
+
+  <main class="shell">
+    <div class="topbar">
+      <div class="brand">Inklinguy Hub</div>
+      <div class="status">
+        <span class="status-dot"></span>
+        Live profile, games, and map from one front page
+      </div>
+    </div>
+
+    <section class="hero">
+      <section class="left">
+        <div class="eyebrow">Playable Universe</div>
+        <h1>Play. Explore. Connect.</h1>
+        <p class="lede">
+          This page should feel like a real creator portal, not a stack of buttons.
+          Your Roblox games, your web games, your map, and your live Certifyd identity
+          all live in one clean system with one obvious flow.
+        </p>
+
+        <div class="cta-row">
+          <a href="games.html" class="button primary">Launch Roblox Games</a>
+          <a href="Webgames.html" class="button secondary">Open Web Games</a>
+          <a href="https://inklinguy.github.io/eddiesmap/Coolest_Locations-checkpoint.html" target="_blank" rel="noopener noreferrer" class="button secondary">View Coolest Locations Map</a>
+        </div>
+
+        <div class="grid-cards">
+          <article class="mini-card">
+            <div>
+              <div class="mini-kicker">Roblox</div>
+              <h3>Fast jump into your builds</h3>
+              <p>Make the strongest interactive work the first thing people can touch.</p>
+            </div>
+            <a href="games.html" class="button primary">Open Roblox</a>
+          </article>
+
+          <article class="mini-card">
+            <div>
+              <div class="mini-kicker">Web Games</div>
+              <h3>Instant browser play</h3>
+              <p>Keep your web experiments one click away with no extra friction.</p>
+            </div>
+            <a href="Webgames.html" class="button primary">Open Web Games</a>
+          </article>
+
+          <article class="mini-card">
+            <div>
+              <div class="mini-kicker">Map</div>
+              <h3>Your coolest locations</h3>
+              <p>Give the map its own spotlight so it feels like a feature, not a leftover link.</p>
+            </div>
+            <a href="https://inklinguy.github.io/eddiesmap/Coolest_Locations-checkpoint.html" target="_blank" rel="noopener noreferrer" class="button primary">Open Map</a>
+          </article>
+        </div>
+      </section>
+
+      <aside class="right">
+        <div class="panel-head">
+          <h2 class="panel-title">Live Certifyd Profile</h2>
+          <div class="pill">Online</div>
+        </div>
+
+        <div class="screen">
+          <iframe
+            src="https://certifyd2.inklinguy.pro/u/david"
+            title="David on Certifyd"
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin">
+          </iframe>
+        </div>
+
+        <div class="panel-footer">
+          <a href="https://certifyd2.inklinguy.pro/u/david" target="_blank" rel="noopener noreferrer" class="button primary">Open Full Certifyd Page</a>
+        </div>
+
+        <div class="bottom-note">
+          If your browser blocks the embedded profile, use the full-page button above.
+          The rest of the site still works normally.
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const imageBaseURL = "https://inklinguy.github.io/mywebsite/images/";
+    const imageExtensions = ["png", "jpg", "jpeg", "webp"];
+    const bg = document.getElementById("bg");
+
+    async function fetchImageList() {
+      try {
+        const res = await fetch("https://api.github.com/repos/Inklinguy/mywebsite/contents/images");
+        const files = await res.json();
+        return files
+          .filter(file => file.type === "file")
+          .filter(file => imageExtensions.some(ext => file.name.toLowerCase().endsWith(ext)))
+          .map(file => imageBaseURL + encodeURIComponent(file.name));
+      } catch (err) {
+        console.error("Error fetching image list:", err);
+        return [];
+      }
+    }
+
+    async function startBackgroundRotation() {
+      const images = await fetchImageList();
+      if (!images.length) return;
+
+      let index = 0;
+      function rotate() {
+        bg.style.backgroundImage = `url('${images[index]}')`;
+        bg.style.transform = index % 2 === 0 ? "scale(1.05)" : "scale(1.09)";
+        index = (index + 1) % images.length;
+      }
+
+      rotate();
+      setInterval(rotate, 9000);
+    }
+
+    startBackgroundRotation();
+  </script>
+</body>
+</html>
